@@ -9,99 +9,74 @@ st.set_page_config(
     layout="wide"
 )
 
+# Sidebar Navigation
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Go to:", ["Home", "Meal Planner", "Workout Tracker", "Profile"])
+
 # Load custom CSS
 with open('styles/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# Initialize session state with valid default values
+# Initialize session state
 if 'user_profile' not in st.session_state:
     st.session_state.user_profile = {
         'name': '',
-        'age': 30,  # Default age set to 30
-        'weight': 70.0,  # Default weight in kg
-        'height': 170,  # Default height in cm
+        'age': 30,
+        'weight': 70.0,
+        'height': 170,
         'gender': 'Male',
         'activity_level': 'moderate',
         'goal': 'weight_loss'
     }
 
-# Main page header
-st.title("🏋️‍♂️ Fitness & Nutrition Tracker")
+# Handle Navigation
+if page == "Home":
+    st.title("🏋️‍♂️ Fitness & Nutrition Tracker")
+    st.header("Dashboard Overview")
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric("Daily Calories", "2000 kcal")
+    with col2:
+        st.metric("Protein Goal", "150g")
+    with col3:
+        st.metric("Workouts This Week", "3/5")
 
-# Dashboard layout
-col1, col2, col3 = st.columns(3)
+    st.header("Quick Actions")
+    if st.button("Log Meal"): st.session_state['current_page'] = 'meal_logger'
+    if st.button("Start Workout"): st.session_state['current_page'] = 'workout_tracker'
 
-with col1:
-    st.markdown("""
-    <div class="metric-card">
-        <h3>Daily Calories</h3>
-        <p>2000 kcal</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.header("Featured Content")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Today's Recommended Meal")
+        st.image("https://images.unsplash.com/photo-1598002041532-459c3549b714", caption="Healthy Chicken Bowl")
+        st.markdown("* Grilled Chicken Breast\n* Brown Rice\n* Steamed Broccoli")
+    with col2:
+        st.subheader("Workout of the Day")
+        st.image("https://images.unsplash.com/photo-1518611012118-696072aa579a", caption="Full Body Workout")
+        st.markdown("* 3x10 Push-ups\n* 3x12 Squats\n* 3x10 Dumbbell Rows")
 
-with col2:
-    st.markdown("""
-    <div class="metric-card">
-        <h3>Protein Goal</h3>
-        <p>150g</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.header("Your Progress")
+    progress_data = pd.DataFrame({
+        'date': pd.date_range(start='2023-01-01', periods=10),
+        'weight': [80, 79.5, 79.2, 78.8, 78.5, 78.2, 77.9, 77.7, 77.5, 77.3]
+    })
+    st.line_chart(progress_data.set_index('date'))
+    
+elif page == "Meal Planner":
+    st.title("🍽️ Meal Planner")
+    st.write("Plan your meals based on your goals and available ingredients.")
+    # Add meal planning functionalities here
 
-with col3:
-    st.markdown("""
-    <div class="metric-card">
-        <h3>Workouts This Week</h3>
-        <p>3/5</p>
-    </div>
-    """, unsafe_allow_html=True)
+elif page == "Workout Tracker":
+    st.title("💪 Workout Tracker")
+    st.write("Track your workouts and monitor progress.")
+    # Add workout tracking functionalities here
 
-# Quick Actions
-st.header("Quick Actions")
-quick_actions = st.columns(2)
+elif page == "Profile":
+    st.title("👤 Profile Settings")
+    st.write("Manage your personal information and fitness goals.")
+    # Add profile management functionalities here
 
-with quick_actions[0]:
-    if st.button("Log Meal"):
-        st.session_state['current_page'] = 'meal_logger'
-
-with quick_actions[1]:
-    if st.button("Start Workout"):
-        st.session_state['current_page'] = 'workout_tracker'
-
-# Featured Content
-st.header("Featured Content")
-featured_cols = st.columns(2)
-
-with featured_cols[0]:
-    st.subheader("Today's Recommended Meal")
-    st.image("https://images.unsplash.com/photo-1598002041532-459c3549b714", 
-             caption="Healthy Chicken Bowl")
-    st.markdown("""
-    * Grilled Chicken Breast
-    * Brown Rice
-    * Steamed Broccoli
-    """)
-
-with featured_cols[1]:
-    st.subheader("Workout of the Day")
-    st.image("https://images.unsplash.com/photo-1518611012118-696072aa579a",
-             caption="Full Body Workout")
-    st.markdown("""
-    * 3x10 Push-ups
-    * 3x12 Squats
-    * 3x10 Dumbbell Rows
-    """)
-
-# Progress Section
-st.header("Your Progress")
-progress_data = pd.DataFrame({
-    'date': pd.date_range(start='2023-01-01', periods=10),
-    'weight': [80, 79.5, 79.2, 78.8, 78.5, 78.2, 77.9, 77.7, 77.5, 77.3]
-})
-
-st.line_chart(progress_data.set_index('date'))
-
-# Footer
-st.markdown("""
----
-Created with ❤️ for your fitness journey
-""")
+st.markdown("---\nCreated with ❤️ for your fitness journey")
