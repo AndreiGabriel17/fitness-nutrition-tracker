@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import os
+import importlib.util
 from utils.helpers import load_food_database, load_exercise_library
 from utils.visualization import create_macro_pie_chart
 
@@ -51,6 +53,16 @@ if 'user_profile' not in st.session_state:
 # Handle Navigation
 page = st.session_state['page']
 
+# Function to dynamically load pages from ./pages/ directory
+def load_page(page_name):
+    page_path = f"pages/{page_name.lower().replace(' ', '_')}.py"
+    if os.path.exists(page_path):
+        spec = importlib.util.spec_from_file_location("page_module", page_path)
+        page_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(page_module)
+        return page_module
+    return None
+
 if page == "Home":
     st.title("🏋️‍♂️ Fitness & Nutrition Tracker")
     st.header("Dashboard Overview")
@@ -85,19 +97,11 @@ if page == "Home":
     })
     st.line_chart(progress_data.set_index('date'))
     
-elif page == "Meal Planner":
-    st.title("🍽️ Meal Planner")
-    st.write("Plan your meals based on your goals and available ingredients.")
-    # Add meal planning functionalities here
-
-elif page == "Workout Tracker":
-    st.title("💪 Workout Tracker")
-    st.write("Track your workouts and monitor progress.")
-    # Add workout tracking functionalities here
-
-elif page == "Profile":
-    st.title("👤 Profile Settings")
-    st.write("Manage your personal information and fitness goals.")
-    # Add profile management functionalities here
+else:
+    page_module = load_page(page)
+    if page_module:
+        page_module.run()
+    else:
+        st.error("Page not found.")
 
 st.markdown("---\nCreated with ❤️ for your fitness journey")
