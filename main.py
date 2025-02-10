@@ -22,11 +22,11 @@ st.markdown("""
 st.sidebar.title("Navigation")
 if st.sidebar.button("Home"):
     st.session_state['page'] = "Home"
-elif st.sidebar.button("Meal Planner"):
+if st.sidebar.button("Meal Planner"):
     st.session_state['page'] = "Meal Planner"
-elif st.sidebar.button("Workout Tracker"):
+if st.sidebar.button("Workout Tracker"):
     st.session_state['page'] = "Workout Tracker"
-elif st.sidebar.button("Profile"):
+if st.sidebar.button("Profile"):
     st.session_state['page'] = "Profile"
 
 # Load custom CSS
