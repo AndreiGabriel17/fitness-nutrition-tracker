@@ -11,7 +11,14 @@ st.set_page_config(
 
 # Sidebar Navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to:", ["Home", "Meal Planner", "Workout Tracker", "Profile"])
+if st.sidebar.button("Home"):
+    st.session_state['page'] = "Home"
+elif st.sidebar.button("Meal Planner"):
+    st.session_state['page'] = "Meal Planner"
+elif st.sidebar.button("Workout Tracker"):
+    st.session_state['page'] = "Workout Tracker"
+elif st.sidebar.button("Profile"):
+    st.session_state['page'] = "Profile"
 
 # Load custom CSS
 with open('styles/style.css') as f:
@@ -30,6 +37,8 @@ if 'user_profile' not in st.session_state:
     }
 
 # Handle Navigation
+page = st.session_state.get('page', "Home")
+
 if page == "Home":
     st.title("🏋️‍♂️ Fitness & Nutrition Tracker")
     st.header("Dashboard Overview")
