@@ -9,6 +9,15 @@ st.set_page_config(
     layout="wide"
 )
 
+# Hide Streamlit's default navigation
+st.markdown("""
+    <style>
+        [data-testid="stSidebarNav"] {
+            display: none;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Sidebar Navigation
 st.sidebar.title("Navigation")
 if st.sidebar.button("Home"):
