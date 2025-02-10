@@ -10,6 +10,26 @@ st.set_page_config(
     page_icon="🏋️‍♂️",
     layout="wide"
 )
+        
+# Inject JavaScript to modify the sidebar toggle behavior
+toggle_script = """
+<script>
+    function updateSidebarToggle() {
+        let sidebar = document.querySelector('[data-testid="stSidebar"]');
+        let toggleButton = document.querySelector('[data-testid="collapsedControl"]');
+        
+        if (sidebar && toggleButton) {
+            let isCollapsed = sidebar.getAttribute("aria-expanded") === "false";
+            toggleButton.innerText = isCollapsed ? ">" : "<"; // Change button text
+        }
+    }
+
+    // Run function on page load and when sidebar is toggled
+    setInterval(updateSidebarToggle, 500);
+</script>
+"""
+st.markdown(toggle_script, unsafe_allow_html=True)
+
 
 # Initialize session state for page if not set
 if 'page' not in st.session_state:

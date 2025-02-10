@@ -17,11 +17,3 @@
     display: none;
 }
 
-/* Style the default sidebar toggle button */
-div[aria-expanded="true"] > [data-testid="collapsedControl"]::before {
-    content: "<"; /* Arrow points left when sidebar is open */
-}
-
-div[aria-expanded="false"] > [data-testid="collapsedControl"]::before {
-    content: ">"; /* Arrow points right when sidebar is collapsed */
-}
