@@ -11,22 +11,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Hide Streamlit's default navigation
-st.markdown("""
-    <style>
-        [data-testid="stSidebarNav"] {
-            display: none;
-        }
-        .sidebar-buttons button {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            padding: 10px;
-            width: 100%;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 # Initialize session state for page if not set
 if 'page' not in st.session_state:
     st.session_state['page'] = "Home"
@@ -42,7 +26,7 @@ st.sidebar.button("Workout Tracker", on_click=set_page, args=("Workout Tracker",
 st.sidebar.button("Profile", on_click=set_page, args=("Profile",))
 st.sidebar.markdown("</div>", unsafe_allow_html=True)
 
-# Load custom CSS
+# Load custom CSS from style.css
 with open('styles/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
