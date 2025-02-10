@@ -3,47 +3,41 @@
     margin: 0 auto;
 }
 
-.metric-card {
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.profile-section {
-    background-color: #f8f9fa;
-    padding: 2rem;
-    border-radius: 15px;
-}
-
-.workout-card {
-    border: 1px solid #e0e0e0;
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 8px;
-}
-
-.meal-card {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    border: 1px solid #eee;
-}
-
-/* Hide Streamlit's default navigation and extra sidebar toggle button */
-[data-testid="stSidebarNav"] {
-    display: none;
-}
-
-[data-testid="collapsedControl"] {
-    display: none;
-}
-
+/* Sidebar Button Styling */
 .sidebar-buttons button {
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 10px;
     padding: 10px;
     width: 100%;
+}
+
+/* Hide Streamlit's default navigation */
+[data-testid="stSidebarNav"] {
+    display: none;
+}
+
+/* Toggle Button for Sidebar */
+[data-testid="collapsedControl"] {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    background-color: #333;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+/* Change arrow direction when sidebar is collapsed */
+[data-testid="collapsedControl"]:before {
+    content: ">";
+}
+
+.sidebar-collapsed [data-testid="collapsedControl"]:before {
+    content: "<";
 }
