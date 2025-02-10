@@ -119,7 +119,7 @@ if page == "Home":
 else:
     page_module = load_page(page)
     if page_module:
-        page_module.run()
+        exec(open(page_path).read(), globals())
     else:
         st.error("Page not found.")
 
