@@ -9,8 +9,8 @@ food_db = load_food_database()
 
 # Sidebar for settings
 st.sidebar.header("Meal Plan Settings")
-target_calories = st.sidebar.number_input("🎯 Target Calories", min_value=1200, max_value=5000, value=2000, key="target_cal")
-dietary_preference = st.sidebar.selectbox("🥦 Dietary Preference", ["None", "Vegetarian", "Vegan", "Keto"], key="diet_pref")
+target_calories = st.sidebar.number_input("🎯 Target Calories", min_value=1200, max_value=5000, value=2000, key="meal_target_cal")  # 🔹 Changed key
+dietary_preference = st.sidebar.selectbox("🥦 Dietary Preference", ["None", "Vegetarian", "Vegan", "Keto"], key="meal_diet_pref")  # 🔹 Changed key
 
 # Meal Plan Section
 st.header("📌 Create Your Meal Plan")
@@ -27,7 +27,7 @@ if st.button("Generate Meal Plan"):
 
 # Food Database Browser
 st.header("📜 Food Database")
-search_term = st.text_input("🔎 Search Foods", key="food_search")
+search_term = st.text_input("🔎 Search Foods", key="meal_food_search")  # 🔹 Changed key
 
 filtered_foods = [
     food for food in food_db['foods']
