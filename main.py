@@ -18,6 +18,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Initialize session state for page if not set
+if 'page' not in st.session_state:
+    st.session_state['page'] = "Home"
+
 # Sidebar Navigation
 st.sidebar.title("Navigation")
 if st.sidebar.button("Home"):
@@ -33,7 +37,7 @@ if st.sidebar.button("Profile"):
 with open('styles/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# Initialize session state
+# Initialize session state for user profile
 if 'user_profile' not in st.session_state:
     st.session_state.user_profile = {
         'name': '',
@@ -46,7 +50,7 @@ if 'user_profile' not in st.session_state:
     }
 
 # Handle Navigation
-page = st.session_state.get('page', "Home")
+page = st.session_state['page']
 
 if page == "Home":
     st.title("🏋️‍♂️ Fitness & Nutrition Tracker")
