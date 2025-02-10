@@ -17,6 +17,13 @@ st.markdown("""
         [data-testid="stSidebarNav"] {
             display: none;
         }
+        .sidebar-buttons button {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -28,11 +35,12 @@ def set_page(page_name):
     st.session_state['page'] = page_name
 
 # Sidebar Navigation
-st.sidebar.title("Navigation")
+st.sidebar.markdown("<div class='sidebar-buttons'>", unsafe_allow_html=True)
 st.sidebar.button("Home", on_click=set_page, args=("Home",))
 st.sidebar.button("Meal Planner", on_click=set_page, args=("Meal Planner",))
 st.sidebar.button("Workout Tracker", on_click=set_page, args=("Workout Tracker",))
 st.sidebar.button("Profile", on_click=set_page, args=("Profile",))
+st.sidebar.markdown("</div>", unsafe_allow_html=True)
 
 # Load custom CSS
 with open('styles/style.css') as f:
@@ -69,15 +77,21 @@ if page == "Home":
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.metric("Daily Calories", "2000 kcal")
+        st.metric("🔥 Daily Calories", "2000 kcal")
+        st.progress(0.7)
     with col2:
-        st.metric("Protein Goal", "150g")
+        st.metric("💪 Protein Goal", "150g")
+        st.progress(0.6)
     with col3:
-        st.metric("Workouts This Week", "3/5")
+        st.metric("🏋️ Workouts This Week", "3/5")
+        st.progress(0.8)
 
     st.header("Quick Actions")
-    if st.button("Log Meal"): st.session_state['current_page'] = 'meal_logger'
-    if st.button("Start Workout"): st.session_state['current_page'] = 'workout_tracker'
+    col1, col2 = st.columns(2)
+    with col1:
+        st.button("🍽️ Log Meal", key="log_meal", help="Track your daily meals")
+    with col2:
+        st.button("🏃‍♂️ Start Workout", key="start_workout", help="Start a new workout session")
 
     st.header("Featured Content")
     col1, col2 = st.columns(2)
@@ -91,11 +105,12 @@ if page == "Home":
         st.markdown("* 3x10 Push-ups\n* 3x12 Squats\n* 3x10 Dumbbell Rows")
 
     st.header("Your Progress")
+    date_range = st.slider("Select Date Range", 1, 10, (1, 10))
     progress_data = pd.DataFrame({
         'date': pd.date_range(start='2023-01-01', periods=10),
         'weight': [80, 79.5, 79.2, 78.8, 78.5, 78.2, 77.9, 77.7, 77.5, 77.3]
     })
-    st.line_chart(progress_data.set_index('date'))
+    st.line_chart(progress_data.set_index('date').iloc[date_range[0]-1:date_range[1]])
     
 else:
     page_module = load_page(page)
