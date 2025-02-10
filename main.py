@@ -22,16 +22,15 @@ st.markdown("""
 if 'page' not in st.session_state:
     st.session_state['page'] = "Home"
 
+def set_page(page_name):
+    st.session_state['page'] = page_name
+
 # Sidebar Navigation
 st.sidebar.title("Navigation")
-if st.sidebar.button("Home"):
-    st.session_state['page'] = "Home"
-if st.sidebar.button("Meal Planner"):
-    st.session_state['page'] = "Meal Planner"
-if st.sidebar.button("Workout Tracker"):
-    st.session_state['page'] = "Workout Tracker"
-if st.sidebar.button("Profile"):
-    st.session_state['page'] = "Profile"
+st.sidebar.button("Home", on_click=set_page, args=("Home",))
+st.sidebar.button("Meal Planner", on_click=set_page, args=("Meal Planner",))
+st.sidebar.button("Workout Tracker", on_click=set_page, args=("Workout Tracker",))
+st.sidebar.button("Profile", on_click=set_page, args=("Profile",))
 
 # Load custom CSS
 with open('styles/style.css') as f:
