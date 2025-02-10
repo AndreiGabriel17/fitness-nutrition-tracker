@@ -1,0 +1,46 @@
+{
+    "foods": [
+        {
+            "id": 1,
+            "name": "Chicken Breast",
+            "calories": 165,
+            "protein": 31,
+            "carbs": 0,
+            "fat": 3.6,
+            "serving_size": 100,
+            "unit": "g"
+        },
+        {
+            "id": 2,
+            "name": "Brown Rice",
+            "calories": 112,
+            "protein": 2.6,
+            "carbs": 23,
+            "fat": 0.9,
+            "serving_size": 100,
+            "unit": "g"
+        },
+        {
+            "id": 3,
+            "name": "Broccoli",
+            "calories": 55,
+            "protein": 3.7,
+            "carbs": 11.2,
+            "fat": 0.6,
+            "serving_size": 100,
+            "unit": "g"
+        }
+    ],
+    "recipes": [
+        {
+            "id": 1,
+            "name": "Healthy Chicken Bowl",
+            "ingredients": [1, 2, 3],
+            "instructions": "1. Cook chicken breast\n2. Prepare brown rice\n3. Steam broccoli\n4. Combine in bowl",
+            "calories": 332,
+            "protein": 37.3,
+            "carbs": 34.2,
+            "fat": 5.1
+        }
+    ]
+}
