@@ -5,84 +5,72 @@ from utils.helpers import calculate_bmi, get_bmi_category, calculate_daily_calor
 
 st.title("👤 User Profile")
 
-# Profile Information
-st.header("Personal Information")
+# Load Profile Data
+profile = st.session_state.user_profile
 
-col1, col2 = st.columns(2)
+# Sidebar for quick navigation
+st.sidebar.header("Profile Settings")
+profile["name"] = st.sidebar.text_input("👤 Name", profile.get("name", ""), key="profile_name")
+profile["age"] = st.sidebar.number_input("🎂 Age", 18, 120, profile.get("age", 30), key="profile_age")
+profile["weight"] = st.sidebar.number_input("⚖️ Weight (kg)", 30.0, 300.0, profile.get("weight", 70.0), key="profile_weight")
+profile["height"] = st.sidebar.number_input("📏 Height (cm)", 100, 250, profile.get("height", 170), key="profile_height")
+profile["gender"] = st.sidebar.selectbox("⚧ Gender", ["Male", "Female"], index=0 if profile.get("gender", "Male") == "Male" else 1, key="profile_gender")
 
-with col1:
-    st.session_state.user_profile['name'] = st.text_input("Name", st.session_state.user_profile.get('name', ''))
-    st.session_state.user_profile['age'] = st.number_input("Age", 18, 120, st.session_state.user_profile.get('age', 30))
-    st.session_state.user_profile['weight'] = st.number_input("Weight (kg)", 30.0, 300.0, st.session_state.user_profile.get('weight', 70.0))
-    st.session_state.user_profile['height'] = st.number_input("Height (cm)", 100, 250, st.session_state.user_profile.get('height', 170))
-    st.session_state.user_profile['gender'] = st.selectbox("Gender", ["Male", "Female"], 
-        index=0 if st.session_state.user_profile.get('gender', 'Male') == 'Male' else 1)
-    st.session_state.user_profile['activity_level'] = st.select_slider(
-        "Activity Level",
-        options=['sedentary', 'light', 'moderate', 'very_active'],
-        value=st.session_state.user_profile.get('activity_level', 'moderate'),
-        help="Sedentary (office job), Light (1-2x/week), Moderate (3-5x/week), Very Active (6-7x/week)"
-    )
-    st.session_state.user_profile['goal'] = st.selectbox(
-        "Fitness Goal", 
-        ["weight_loss", "maintenance", "muscle_gain"],
-        index=0 if not st.session_state.user_profile.get('goal') else ["weight_loss", "maintenance", "muscle_gain"].index(st.session_state.user_profile['goal'])
-    )
+profile["activity_level"] = st.sidebar.select_slider(
+    "🏃‍♂️ Activity Level",
+    options=['sedentary', 'light', 'moderate', 'very_active'],
+    value=profile.get("activity_level", "moderate"),
+    key="profile_activity"
+)
 
-with col2:
-    # Calculate and display BMI
-    if st.session_state.user_profile['weight'] > 0 and st.session_state.user_profile['height'] > 0:
-        bmi = calculate_bmi(st.session_state.user_profile['weight'], st.session_state.user_profile['height'])
+profile["goal"] = st.sidebar.selectbox(
+    "🎯 Fitness Goal",
+    ["weight_loss", "maintenance", "muscle_gain"],
+    index=["weight_loss", "maintenance", "muscle_gain"].index(profile.get("goal", "weight_loss")),
+    key="profile_goal"
+)
+
+# Display BMI and Calories
+with st.expander("📊 **Your Body Metrics**", expanded=True):
+    if profile["weight"] > 0 and profile["height"] > 0:
+        bmi = calculate_bmi(profile["weight"], profile["height"])
         bmi_category = get_bmi_category(bmi)
 
-        st.markdown("""
-        ### Your Body Metrics
-        """)
+        st.metric("📏 BMI", f"{bmi:.1f}", help=f"Category: {bmi_category}")
 
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3>BMI: {bmi}</h3>
-            <p>Category: {bmi_category}</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # Calculate and display recommended calories
         recommended_calories = calculate_daily_calories(
-            st.session_state.user_profile['weight'],
-            st.session_state.user_profile['height'],
-            st.session_state.user_profile['age'],
-            st.session_state.user_profile['gender'],
-            st.session_state.user_profile['activity_level'],
-            st.session_state.user_profile['goal']
+            profile["weight"], profile["height"], profile["age"],
+            profile["gender"], profile["activity_level"], profile["goal"]
         )
 
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3>Daily Calorie Target</h3>
-            <p>{recommended_calories} kcal</p>
-            <small>Based on your profile and goals</small>
-        </div>
-        """, unsafe_allow_html=True)
+        st.metric("🔥 Daily Calorie Target", f"{recommended_calories} kcal")
 
         # Macro breakdown
-        protein_target = st.session_state.user_profile['weight'] * 2  # 2g per kg bodyweight
+        protein_target = profile["weight"] * 2  # 2g per kg bodyweight
         fat_target = (recommended_calories * 0.25) / 9  # 25% of calories from fat
         carbs_target = (recommended_calories - (protein_target * 4) - (fat_target * 9)) / 4
 
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3>Recommended Macros</h3>
-            <p>Protein: {int(protein_target)}g</p>
-            <p>Carbs: {int(carbs_target)}g</p>
-            <p>Fat: {int(fat_target)}g</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.progress(protein_target / (recommended_calories / 4))
+        st.write(f"**Protein:** {int(protein_target)}g")
+        
+        st.progress(carbs_target / (recommended_calories / 4))
+        st.write(f"**Carbs:** {int(carbs_target)}g")
+        
+        st.progress(fat_target / (recommended_calories / 9))
+        st.write(f"**Fat:** {int(fat_target)}g")
 
-    st.image("https://images.unsplash.com/photo-1518459031867-a89b944bffe4", caption="Your Fitness Journey")
-
+st.image("https://images.unsplash.com/photo-1518459031867-a89b944bffe4", caption="Your Fitness Journey")
 
 # Progress Tracking
-st.header("Progress Tracking")
+st.header("📈 Progress Tracking")
+
+# Allow users to manually input their weight history
+st.subheader("📊 Log Your Weight")
+weight_date = st.date_input("📅 Select Date")
+weight_value = st.number_input("⚖️ Enter Your Weight (kg)", 30.0, 300.0, profile["weight"], key="log_weight")
+
+if st.button("Log Weight"):
+    st.success(f"✅ Logged {weight_value} kg on {weight_date}!")
 
 # Mock progress data
 progress_data = pd.DataFrame({
@@ -93,41 +81,21 @@ progress_data = pd.DataFrame({
 st.plotly_chart(create_progress_chart(progress_data))
 
 # Save Changes
-if st.button("Save Changes"):
-    st.success("Profile updated successfully!")
+if st.button("💾 Save Profile Changes"):
+    st.success("✅ Profile updated successfully!")
 
-# Achievement Badges
-st.header("Achievements")
+# Achievements Section
+st.header("🏆 Achievements")
 achievements = st.columns(4)
 
 with achievements[0]:
-    st.markdown("""
-    <div class="metric-card">
-        <h4>🏃‍♂️ Getting Started</h4>
-        <p>Completed first workout</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.success("🏃‍♂️ Getting Started\n\nCompleted first workout!")
 
 with achievements[1]:
-    st.markdown("""
-    <div class="metric-card">
-        <h4>🥗 Nutrition Pro</h4>
-        <p>Logged meals for 7 days</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.info("🥗 Nutrition Pro\n\nLogged meals for 7 days!")
 
 with achievements[2]:
-    st.markdown("""
-    <div class="metric-card">
-        <h4>💪 Workout Warrior</h4>
-        <p>10 workouts completed</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.warning("💪 Workout Warrior\n\n10 workouts completed!")
 
 with achievements[3]:
-    st.markdown("""
-    <div class="metric-card">
-        <h4>⭐ Goal Crusher</h4>
-        <p>Reached first target</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.error("⭐ Goal Crusher\n\nReached first target!")

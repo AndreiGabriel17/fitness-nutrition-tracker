@@ -7,60 +7,43 @@ st.title("🥗 Meal Planner")
 # Load food database
 food_db = load_food_database()
 
-# Meal Planning Section
-st.header("Create Your Meal Plan")
+# Sidebar for settings
+st.sidebar.header("Meal Plan Settings")
+target_calories = st.sidebar.number_input("🎯 Target Calories", min_value=1200, max_value=5000, value=2000, key="target_cal")
+dietary_preference = st.sidebar.selectbox("🥦 Dietary Preference", ["None", "Vegetarian", "Vegan", "Keto"], key="diet_pref")
 
-col1, col2 = st.columns(2)
-
-with col1:
-    target_calories = st.number_input("Target Daily Calories", min_value=1200, max_value=5000, value=2000)
-    dietary_preference = st.selectbox("Dietary Preference", ["None", "Vegetarian", "Vegan", "Keto"])
-
-with col2:
-    st.image("https://images.unsplash.com/photo-1551584277-a31a25e08fc8", caption="Healthy Meal Planning")
+# Meal Plan Section
+st.header("📌 Create Your Meal Plan")
 
 # Generate meal plan
 if st.button("Generate Meal Plan"):
     meal_plan = generate_meal_plan(target_calories, food_db)
-    
-    st.subheader("Your Meal Plan")
+
+    st.subheader("🍽️ Your Meal Plan")
     for i, meal in enumerate(meal_plan, 1):
-        st.markdown(f"""
-        <div class="meal-card">
-            <h4>Meal {i}</h4>
-            <p>{meal['name']}</p>
-            <p>Calories: {meal['calories']} kcal</p>
-            <p>Protein: {meal['protein']}g | Carbs: {meal['carbs']}g | Fat: {meal['fat']}g</p>
-        </div>
-        """, unsafe_allow_html=True)
+        with st.expander(f"Meal {i}: {meal['name']}"):
+            st.write(f"**Calories:** {meal['calories']} kcal")
+            st.write(f"**Protein:** {meal['protein']}g | **Carbs:** {meal['carbs']}g | **Fat:** {meal['fat']}g")
 
 # Food Database Browser
-st.header("Food Database")
-search_term = st.text_input("Search Foods")
+st.header("📜 Food Database")
+search_term = st.text_input("🔎 Search Foods", key="food_search")
 
 filtered_foods = [
     food for food in food_db['foods']
     if search_term.lower() in food['name'].lower()
 ] if search_term else food_db['foods']
 
-for food in filtered_foods:
-    st.markdown(f"""
-    <div class="meal-card">
-        <h4>{food['name']}</h4>
-        <p>Per {food['serving_size']}{food['unit']}:</p>
-        <p>Calories: {food['calories']} kcal</p>
-        <p>Protein: {food['protein']}g | Carbs: {food['carbs']}g | Fat: {food['fat']}g</p>
-    </div>
-    """, unsafe_allow_html=True)
+# Display food database as a table
+if filtered_foods:
+    st.dataframe(filtered_foods)
+else:
+    st.write("⚠️ No foods found. Try a different search term.")
 
 # Recipe Suggestions
-st.header("Recipe Suggestions")
+st.header("📌 Recipe Suggestions")
 for recipe in food_db['recipes']:
-    st.markdown(f"""
-    <div class="meal-card">
-        <h4>{recipe['name']}</h4>
-        <p>{recipe['instructions']}</p>
-        <p>Calories: {recipe['calories']} kcal</p>
-        <p>Protein: {recipe['protein']}g | Carbs: {recipe['carbs']}g | Fat: {recipe['fat']}g</p>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.expander(f"🍳 {recipe['name']}"):
+        st.write(f"**Calories:** {recipe['calories']} kcal")
+        st.write(f"**Protein:** {recipe['protein']}g | **Carbs:** {recipe['carbs']}g | **Fat:** {recipe['fat']}g")
+        st.write(f"**Instructions:** {recipe['instructions']}")
