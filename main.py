@@ -119,8 +119,9 @@ if page == "Home":
 else:
     page_module = load_page(page)
     if page_module:
-        exec(open(page_path).read(), globals())
+        exec(open(f"pages/{page.lower().replace(' ', '_')}.py").read(), globals())
     else:
         st.error("Page not found.")
+
 
 st.markdown("---\nCreated with ❤️ for your fitness journey")
