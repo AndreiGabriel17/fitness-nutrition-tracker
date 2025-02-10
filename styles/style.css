@@ -31,10 +31,6 @@
     border: 1px solid #eee;
 }
 
-[data-testid="stSidebarNav"] {
-    display: none;
-}
-
 /* Hide Streamlit's default navigation and extra sidebar toggle button */
 [data-testid="stSidebarNav"] {
     display: none;
