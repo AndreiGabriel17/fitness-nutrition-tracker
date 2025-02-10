@@ -17,27 +17,11 @@
     display: none;
 }
 
-/* Toggle Button for Sidebar */
-[data-testid="collapsedControl"] {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    background-color: #333;
-    color: white;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    text-align: center;
-    line-height: 30px;
-    cursor: pointer;
+/* Style the default sidebar toggle button */
+div[aria-expanded="true"] > [data-testid="collapsedControl"]::before {
+    content: "<"; /* Arrow points left when sidebar is open */
 }
 
-/* Change arrow direction when sidebar is collapsed */
-[data-testid="collapsedControl"]:before {
-    content: ">";
-}
-
-.sidebar-collapsed [data-testid="collapsedControl"]:before {
-    content: "<";
+div[aria-expanded="false"] > [data-testid="collapsedControl"]::before {
+    content: ">"; /* Arrow points right when sidebar is collapsed */
 }
